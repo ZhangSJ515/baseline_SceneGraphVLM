@@ -1,6 +1,6 @@
 # Current 60-video `final_event_labels.json` data update
 
-This archive contains the updated GraphEdit-R1 data adapter for the current Air-SMOAM event labels. The labels are consumed directly instead of reconstructing relationships from legacy action labels.
+This package contains the updated GraphEdit-R1 data adapter for the current Air-SMOAM event labels. The labels are consumed directly instead of reconstructing relationships from legacy action labels.
 
 ## Extract
 
@@ -10,7 +10,7 @@ From the repository root:
 bash extensions/graphedit_r1/dataset_v4_archive/unpack.sh
 ```
 
-The verified source is extracted to:
+The script concatenates the binary archive parts under `archive/`, verifies the reconstructed tarball, and extracts the source to:
 
 ```text
 extensions/graphedit_r1/dataset_v4/
@@ -22,7 +22,7 @@ Then read:
 extensions/graphedit_r1/dataset_v4/README.md
 ```
 
-SHA-256 of the decoded archive:
+SHA-256 of the reconstructed archive:
 
 ```text
 b6b2ee990d8a3720cb86b6e2296fa356894a51613a192717d773748d5c05a2e1
