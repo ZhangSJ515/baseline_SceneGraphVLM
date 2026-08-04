@@ -3,10 +3,16 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TARGET_DIR="$SCRIPT_DIR/.."
+ENCODED="$SCRIPT_DIR/final_event_v4_update.tar.gz.b64"
 ARCHIVE="$SCRIPT_DIR/final_event_v4_update.tar.gz"
-EXPECTED_SHA256="b6b2ee990d8a3720cb86b6e2296fa356894a51613a192717d773748d5c05a2e1"
+EXPECTED_SHA256="ba6e869ade73b253cbdecaed37c19641852a249ffc8ede0e70e9bd020646889b"
 
-cat "$SCRIPT_DIR"/archive/final_event_v4_update.tar.gz.part* > "$ARCHIVE"
+if [[ ! -f "$ENCODED" ]]; then
+  echo "ERROR: missing encoded adapter archive: $ENCODED" >&2
+  exit 1
+fi
+
+base64 --decode "$ENCODED" > "$ARCHIVE"
 ACTUAL_SHA256="$(sha256sum "$ARCHIVE" | awk '{print $1}')"
 if [[ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]]; then
   echo "ERROR: SHA-256 mismatch" >&2
