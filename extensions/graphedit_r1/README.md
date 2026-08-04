@@ -25,6 +25,34 @@ Then read:
 extensions/graphedit_r1/source/README.md
 ```
 
+## Current 60-video final-event-label adapter
+
+The latest Air-SMOAM labels already contain selected event participants,
+functional regions, object behaviours, semantic interactions, sparse spatial
+relations, confidence/provenance and annotation-review status. Use the direct
+adapter under:
+
+```text
+extensions/graphedit_r1/dataset_v4/
+```
+
+First extract it:
+
+```bash
+bash extensions/graphedit_r1/dataset_v4_archive/unpack.sh
+```
+
+Then run:
+
+```bash
+bash extensions/graphedit_r1/dataset_v4/run_60video_pipeline.sh
+```
+
+It replaces the earlier action-to-relation heuristic and emits frame records
+compatible with the unpacked GraphEdit-R1 builder. The adapter preserves the
+existing 42/6/12 video split through an explicit split manifest; it never
+generates a new random split.
+
 ## Included implementation
 
 - executable delta-graph protocol with `ADD_NODE`, `UPDATE_NODE`, `ADD_REL`, `UPDATE_REL`, `END_REL`, and `DELETE_REL`;
@@ -35,9 +63,12 @@ extensions/graphedit_r1/source/README.md
 - SFT and GRPO launchers that reuse the baseline repository's Qwen3.5/M-Swift pipeline;
 - MSwift ORM reward plugin for format, executability, node/relation quality, lifecycle, temporal boundaries, repair improvement, edit minimality, and hallucination penalties;
 - CLI tools for building, validating, executing, and evaluating datasets/model outputs;
-- AirGraph example schema, sample data, prompts, tests, ablations, metrics, and a complete implementation/research plan.
+- AirGraph example schema, sample data, prompts, tests, ablations, metrics, and a complete implementation/research plan;
+- direct ingestion and auditing of the current 60-video `final_event_labels.json` corpus.
 
 ## Local validation completed before publication
+
+Core supplement:
 
 - 6 unit tests passed;
 - Python compilation passed;
@@ -45,5 +76,12 @@ extensions/graphedit_r1/source/README.md
 - JSONL validation passed;
 - deterministic edit execution passed;
 - the canonical target achieved 1.0 for all reward diagnostics and total reward.
+
+Current v4 data adapter:
+
+- 6 adapter tests passed;
+- the supplied `bridge off` label produced 13 annotated snapshots;
+- 1,819 spatial observations were preserved and merged into 303 persistent relation instances;
+- regions, selected participants, spatial-only events and review-status warnings were validated.
 
 No existing SceneGraphVLM reproduction code is modified by this supplement.
