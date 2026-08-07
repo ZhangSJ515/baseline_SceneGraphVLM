@@ -13,7 +13,14 @@ if (( ${#parts[@]} == 0 )); then
   exit 1
 fi
 
-cat "${parts[@]}" | base64 --decode > "$ARCHIVE"
+# Git may check text files out with CRLF depending on core.autocrlf or
+# repository/worktree settings. GNU base64 treats CR characters as invalid
+# input, so normalize all ASCII whitespace before decoding. The SHA-256 check
+# below still guarantees that no corrupted archive is accepted.
+cat "${parts[@]}" \
+  | LC_ALL=C tr -d '\r\n\t ' \
+  | base64 --decode > "$ARCHIVE"
+
 actual="$(sha256sum "$ARCHIVE" | awk '{print $1}')"
 if [[ "$actual" != "$EXPECTED" ]]; then
   echo "ERROR: SHA-256 mismatch" >&2
