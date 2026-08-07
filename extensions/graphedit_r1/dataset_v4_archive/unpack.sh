@@ -12,7 +12,12 @@ if [[ ! -f "$ENCODED" ]]; then
   exit 1
 fi
 
-base64 --decode "$ENCODED" > "$ARCHIVE"
+# Normalize CRLF/whitespace before decoding. This makes extraction robust to
+# Git core.autocrlf/worktree settings while the SHA-256 check still detects
+# any actual content corruption.
+LC_ALL=C tr -d '\r\n\t ' < "$ENCODED" \
+  | base64 --decode > "$ARCHIVE"
+
 ACTUAL_SHA256="$(sha256sum "$ARCHIVE" | awk '{print $1}')"
 if [[ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]]; then
   echo "ERROR: SHA-256 mismatch" >&2
